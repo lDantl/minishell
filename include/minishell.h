@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2021/11/30 16:15:15 by rdanica          ###   ########.fr       */
+/*   Updated: 2021/12/01 15:56:17 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,14 @@ typedef struct s_lst
 	struct s_lst	*back;
 }	t_lst;
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_lst	*next;
+	struct s_lst	*back;
+}	t_env;
+
 char	*preparser(char *str);
 char	**ft_split_f_shell(char const *s, char c);
 char	*ft_dollar(char *str, char **env);
@@ -56,5 +64,7 @@ int		ft_this_built_in(char *cmd);
 int		redirect_count(char **argv);
 int		len_tab(char **str);
 char	*ft_space_delited(char *str);
+int		ft_quote_redir_or_pipe(char *str);
+void	ft_print_result(t_lst *cmd, char **massive);
 
 #endif

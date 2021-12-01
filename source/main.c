@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2021/11/30 16:14:44 by rdanica          ###   ########.fr       */
+/*   Updated: 2021/12/01 16:05:40 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,14 +122,40 @@ void	parser(char **mass, char **env)
 		j = 0;
 		if (mass[i][j] == '\'' || mass[i][j] == '"')
 		{
-			if (mass[i][j + 1] == '|' && (mass[i][j + 2] == '"'
-			|| mass[i][j + 2] == '\''))
-				continue ;
-			mass[i] = ft_quote(mass[i], env);
+			if (mass[i][j + 1] == '|' || mass[i][j + 1] == '<'
+			|| mass[i][j + 1] == '>')
+			{
+				j = ft_quote_redir_or_pipe(mass[i]);
+				if (j)
+					continue ;
+			}
+			else
+				mass[i] = ft_quote(mass[i], env);
 		}
 		else if (mass[i][j] == '$')
 			mass[i] = ft_dollar(mass[i], env);
 	}
+}
+
+int	ft_quote_redir_or_pipe(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] == '\'' || str[i] == '"')
+	{
+		if (str[i + 1] == '|'
+			&& (str[i + 2] == '"' || str[i + 2] == '\''))
+			return (1);
+		if ((str[i + 1] == '>' || str[i + 1] == '<')
+			&& (str[i + 2] == '"' || str[i + 2] == '\''))
+			return (1);
+		if ((str[i + 1] == '>' || str[i + 1] == '<')
+			&& (str[i + 2] == '>' || str[i + 2] == '<')
+			&& (str[i + 3] == '"' || str[i + 3] == '\''))
+			return (1);
+	}
+	return (0);
 }
 
 t_lst	*new_cmd(char **massive, int i, int p, char **env)
@@ -350,70 +376,27 @@ void redirects_find(t_lst **cmd)
 }
 
 
-
-
-int	main(int argc, char **argv, char **env)
+int	validator(t_lst *cmd)
 {
-	t_lst	*cmd;
-	int		i;
-	char	**massive;
-	char	*str;
-	char	*tmp;
+	int i;
 
-	i = -1;
-	cmd = NULL;
-	(void) argc;
-	(void) argv;
-	while (1)
+	while (cmd)
 	{
-		str = readline("\033[0;32mIskander $> \033[0;29m");
-		if (!str)
-			break ;
-		if (!*str)
-			continue ;
-		if (str)
-			add_history(str);
-		printf("%s\n\n", str);
-		str = preparser(str);
-		str = ft_strtrim(str, " ");
-		str = ft_space_delited(str);
-		massive = ft_split_f_shell(str, ' ');
-		while (massive[++i])
-			printf("massive[%d]: %s\n", i, massive[i]);
-		if (str == NULL)
-			return (1);
-		parser(massive, env);
 		i = -1;
-		recording_to_lists(&cmd, massive, env);
-		redirects_find(&cmd);
-		i = -1;
-		printf("\n\n\n");
-		while (massive[++i])
-			printf("MASSIVE[%d]: %s\n", i, massive[i]);
-		i = -1;
-		t_lst *temp = cmd;
-		while (cmd)
+		while (cmd->field[++i])
 		{
-			while (cmd->field[++i])
-				printf("List[%d] %s\n\n", i, cmd->field[i]);
-			i = -1;
-			cmd = cmd->next;
-		}
-		i = -1;
-		while (temp)
-		{
-			if (!temp->redirs || !*temp->redirs)
+			if((!ft_strcmp(cmd->field[i], ">>") || \
+			!ft_strcmp(cmd->field[i], ">") || \
+			!ft_strcmp(cmd->field[i], "<") || \
+			!ft_strcmp(cmd->field[i], "<<")) && !cmd->field[i + 1])
 			{
-				temp = temp->next;
-				continue ;
+				printf("syntax error near unexpected token\n");
+				return (0);
 			}
-			while (temp->redirs[++i])
-				printf("Rediret[%d] %s\n\n", i, temp->redirs[i]);
-			i = -1;
-			temp = temp->next;
 		}
+		cmd = cmd->next;
 	}
-	return (0);
+	return (1);
 }
 
 char	*ft_find_path(char *cmd, char **env)
@@ -423,7 +406,7 @@ char	*ft_find_path(char *cmd, char **env)
 	int		i;
 
 	i = 0;
-	if (!ft_this_built_in(cmd))
+	if (!cmd || !*cmd || !ft_this_built_in(cmd))
 		return (0);
 	while (env[i] && ft_strnstr(env[i], "PATH=", 5) == 0)
 		i++;
@@ -520,15 +503,17 @@ char	*ft_space_delited(char *str)
 	{
 		if (str[i] == '\'')
 		{
-			while (str[++i] != '\'')
+			while (str[++i] && str[i] != '\'')
 				;
-			i++;
+			if (!str[i++])
+				return (str);
 		}
 		if (str[i] == '\"')
 		{
-			while (str[++i] != '\"')
+			while (str[++i] && str[i] != '\"')
 				;
-			i++;
+			if (!str[i++])
+				return (str);
 		}
 		if (str[i] == ' ' && str[i + 1] == ' ')
 		{
@@ -542,4 +527,166 @@ char	*ft_space_delited(char *str)
 		}
 	}
 	return (str);
+}
+
+int	validator_ne_pidr(char **massive)
+{
+	int	i;
+
+	i = -1;
+	while (massive[++i])
+	{
+		if ((*massive[i] == '|' && !massive[i + 1]) || **massive == '|')
+		{
+			printf("syntax error near unexpected token '|\'\n");
+			return (0);
+		}
+	}
+	return (1);
+}
+
+
+
+void	cmd_c_sl(int signum)
+{
+	(void)signum;
+	printf("Quit :3\n");
+}
+
+void	cmd_c_fork(int signum)
+{
+	(void)signum;
+	write(1, "\n", 1);
+}
+
+void	cmd_c(int signum)
+{
+	(void)signum;
+	rl_on_new_line();
+	rl_redisplay();
+	write(1, "  \n", 3);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+
+
+
+
+int	main(int argc, char **argv, char **env)
+{
+	t_lst	*cmd;
+	int		i;
+	char	**massive;
+	char	*str;
+	char	*tmp;
+
+	i = -1;
+	cmd = NULL;
+	(void) argc;
+	(void) argv;
+	while (1)
+	{
+		signal(SIGINT, cmd_c);
+		signal(SIGQUIT, SIG_IGN);
+		str = readline("\033[0;32mIskander $> \033[0;29m");
+		signal(SIGINT, cmd_c_fork);
+		signal(SIGQUIT, cmd_c_sl);
+		if (!str)
+			break ;
+		if (!*str)
+			continue ;
+		if (str)
+			add_history(str);
+		str = preparser(str);
+		if (str == NULL)
+		{
+			printf("error\n");
+			continue ;
+		}
+		str = ft_strtrim(str, " ");
+		str = ft_space_delited(str);
+		massive = ft_split_f_shell(str, ' ');
+		if (!validator_ne_pidr(massive))
+			continue ;
+		if (str == NULL)
+			return (1);
+		parser(massive, env);
+		recording_to_lists(&cmd, massive, env);
+		if (!validator(cmd))
+			continue ;
+		redirects_find(&cmd);
+		ft_print_result(cmd, massive);
+		cmd = NULL;
+	}
+	return (0);
+}
+
+void	ft_print_result(t_lst *cmd, char **massive)
+{
+	t_lst *temp = cmd;
+	int i = -1;
+	while (massive[++i])
+		printf("MASSIVE[%d]: %s\n", i, massive[i]);
+	printf("\n\n\n");
+	
+	i = -1;
+	while (cmd)
+	{
+		while (cmd->field[++i])
+			printf("List[%d] %s\n\n", i, cmd->field[i]);
+		i = -1;
+		cmd = cmd->next;
+	}
+	i = -1;
+	while (temp)
+	{
+		if (!temp->redirs || !*temp->redirs)
+		{
+			temp = temp->next;
+			continue ;
+		}
+		while (temp->redirs[++i])
+			printf("Rediret[%d] %s\n\n", i, temp->redirs[i]);
+		i = -1;
+		temp = temp->next;
+	}
+}
+
+t_env	*ft_env_to_list(char **env)
+{
+	t_env	*env;
+	int		i;
+
+	i = -1;
+	env = NULL;
+	while(env[++i])
+	{
+		lst_add_env(&env, new_env_elem(env[i]));
+	}
+}
+
+t_lst	*new_cmd(char *str)
+{
+	t_lst	*el;
+	int		n;
+
+	n = 0;
+	ft_split_key 
+	return (el);
+}
+
+void	lst_add_env(t_env **lst, t_lst *el)
+{
+	if (!el)
+		return ;
+	if (!(*lst))
+	{
+		*lst = el;
+		return ;
+	}
+	el->back = *lst;
+	(*lst)->next = el;
+	*lst = el;
 }
