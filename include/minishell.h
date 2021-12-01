@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2021/11/30 13:02:34 by rdanica          ###   ########.fr       */
+/*   Updated: 2021/11/30 16:15:15 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,12 @@
 # include <readline/history.h>
 # include <editline/readline.h>
 # include <signal.h>
-# include "libft/libft.h"
+# include "../libft/libft.h"
 
 typedef struct s_lst
 {
 	char			**field;
+	char			**redirs;
 	struct s_lst	*next;
 	struct s_lst	*back;
 }	t_lst;
@@ -52,5 +53,8 @@ char	*ft_strjoin_slash(char const *s1, char const *s2);
 void	ft_error(char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_this_built_in(char *cmd);
+int		redirect_count(char **argv);
+int		len_tab(char **str);
+char	*ft_space_delited(char *str);
 
 #endif

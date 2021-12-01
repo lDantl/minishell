@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2021/11/30 13:24:22 by rdanica          ###   ########.fr       */
+/*   Updated: 2021/11/30 16:14:44 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ t_lst	*new_cmd(char **massive, int i, int p, char **env)
 		return (NULL);
 	el->next = NULL;
 	el->back = NULL;
+	el->redirs = NULL;
 	el->field[n] = ft_find_path(massive[i], env);
 	if (el->field[n] != 0)
 	{
@@ -213,6 +214,144 @@ void	recording_to_lists(t_lst **cmd, char **massive, char **env)
 		*cmd = (*cmd)->back;
 }
 
+
+
+char	**record_redicts(char **argv)
+{
+	int		str;
+	int		i;
+	char	**temp;
+
+	str = 0;
+	i = 0;
+	temp = (char **)malloc((redirect_count(argv) + 1) * sizeof(char *));
+	while (argv[str])
+	{
+		if (!ft_strcmp(argv[str], ">>") || \
+		!ft_strcmp(argv[str], ">") || \
+		!ft_strcmp(argv[str], "<") || \
+		!ft_strcmp(argv[str], "<<"))
+		{
+			temp[i] = ft_strdup(argv[str]);
+			temp[i + 1] = ft_strdup(argv[str + 1]);
+			i += 2;
+			str += 2;
+			continue ;
+		}
+		str++;
+	}
+	temp[i] = NULL;
+	return (temp);
+}
+
+
+void	free_str(char *string_free)
+{
+	if (string_free)
+		free(string_free);
+}
+
+void	free_argv(char **argv)
+{
+	int	i;
+
+	i = -1;
+	if (argv && *argv != '\0')
+	{
+		if (*argv)
+			while (argv[++i])
+				free_str(argv[i]);
+	}
+	if (argv)
+		free(argv);
+}
+
+
+int	len_tab(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+int	redirect_count(char **argv)
+{
+	int	count;
+	int	i;
+
+	count = 0;
+	i = -1;
+	while (argv[++i])
+		if (!ft_strcmp(argv[i], ">>") || \
+		!ft_strcmp(argv[i], ">") || \
+		!ft_strcmp(argv[i], "<") || \
+		!ft_strcmp(argv[i], "<<"))
+			count++;
+	return (count * 2);
+}
+
+
+char	**rewrite_cmd(char **argv)
+{
+	int		i;
+	int		str;
+	char	**temp;
+
+	i = 0;
+	str = 0;
+	temp = (char **)malloc(((len_tab(argv) - redirect_count(argv)) + 1) * \
+	sizeof(char *));
+	while (argv[i])
+	{
+		if (!ft_strcmp(argv[i], ">>") || \
+		!ft_strcmp(argv[i], ">") || \
+		!ft_strcmp(argv[i], "<") || \
+		!ft_strcmp(argv[i], "<<"))
+		{
+			i += 2;
+			continue ;
+		}
+		temp[str] = ft_strdup(argv[i]);
+		str++;
+		i++;
+	}
+	temp[str] = NULL;
+	return (temp);
+}
+
+
+void redirects_find(t_lst **cmd)
+{
+	t_lst		*temp;
+	char		**ar;
+
+	while ((*cmd)->back)
+		*cmd = (*cmd)->back;
+	temp = *cmd;
+	while (*cmd)
+	{
+		ar = (*cmd)->field;
+		if (!ar || !*ar)
+		{
+			*cmd = (*cmd)->next;
+			continue ;
+		}
+		(*cmd)->redirs = record_redicts(ar);
+		if (!(*cmd)->redirs)
+			break ;
+		(*cmd)->field = rewrite_cmd(ar);
+		free_argv(ar);
+		*cmd = (*cmd)->next;
+	}
+	*cmd = temp;
+}
+
+
+
+
 int	main(int argc, char **argv, char **env)
 {
 	t_lst	*cmd;
@@ -225,28 +364,54 @@ int	main(int argc, char **argv, char **env)
 	cmd = NULL;
 	(void) argc;
 	(void) argv;
-	str = ft_strdup("/bin/cat -e file|\"ls -la\" | $PWD | \"pwd\" >>\'$PWD\'|\"$PWD\"");
-	printf("%s\n\n", str);
-	str = preparser(str);
-	massive = ft_split_f_shell(str, ' ');
-	while (massive[++i])
-		printf("massive[%d]: %s\n", i, massive[i]);
-	if (str == NULL)
-		return (1);
-	parser(massive, env);
-	i = -1;
-	recording_to_lists(&cmd, massive, env);
-	i = -1;
-	printf("\n\n\n");
-	while (massive[++i])
-		printf("MASSIVE[%d]: %s\n", i, massive[i]);
-	i = -1;
-	while (cmd)
+	while (1)
 	{
-		while (cmd->field[++i])
-			printf("List[%d] %s\n\n", i, cmd->field[i]);
+		str = readline("\033[0;32mIskander $> \033[0;29m");
+		if (!str)
+			break ;
+		if (!*str)
+			continue ;
+		if (str)
+			add_history(str);
+		printf("%s\n\n", str);
+		str = preparser(str);
+		str = ft_strtrim(str, " ");
+		str = ft_space_delited(str);
+		massive = ft_split_f_shell(str, ' ');
+		while (massive[++i])
+			printf("massive[%d]: %s\n", i, massive[i]);
+		if (str == NULL)
+			return (1);
+		parser(massive, env);
 		i = -1;
-		cmd = cmd->next;
+		recording_to_lists(&cmd, massive, env);
+		redirects_find(&cmd);
+		i = -1;
+		printf("\n\n\n");
+		while (massive[++i])
+			printf("MASSIVE[%d]: %s\n", i, massive[i]);
+		i = -1;
+		t_lst *temp = cmd;
+		while (cmd)
+		{
+			while (cmd->field[++i])
+				printf("List[%d] %s\n\n", i, cmd->field[i]);
+			i = -1;
+			cmd = cmd->next;
+		}
+		i = -1;
+		while (temp)
+		{
+			if (!temp->redirs || !*temp->redirs)
+			{
+				temp = temp->next;
+				continue ;
+			}
+			while (temp->redirs[++i])
+				printf("Rediret[%d] %s\n\n", i, temp->redirs[i]);
+			i = -1;
+			temp = temp->next;
+		}
 	}
 	return (0);
 }
@@ -341,4 +506,40 @@ int	ft_strcmp(const char *s1, const char *s2)
 		i++;
 	}
 	return (0);
+}
+
+
+char	*ft_space_delited(char *str)
+{
+	int		i;
+	int		space;
+	char	*temp;
+
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] == '\'')
+		{
+			while (str[++i] != '\'')
+				;
+			i++;
+		}
+		if (str[i] == '\"')
+		{
+			while (str[++i] != '\"')
+				;
+			i++;
+		}
+		if (str[i] == ' ' && str[i + 1] == ' ')
+		{
+			space = i;
+			while (str[space++] == ' ')
+				;
+			str[i + 1] = '\0';
+			temp = str;
+			str = ft_strjoin(str, str + space - 1);
+			free(temp);
+		}
+	}
+	return (str);
 }

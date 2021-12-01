@@ -35,7 +35,7 @@ static	size_t	ft_get_nb_strs(char const *s, char c)
 			if ((s[i + 1] != '|' && s[i + 1] != '\'' && s[i + 1] != '"'
 					&& s[i + 1] != '<' && s[i + 1] != '>')
 				&& (s[i - 1] != '|' && s[i - 1] != '\''
-					&& s[i - 1] != '"' && s[i + 1] != '<' && s[i + 1] != '>'))
+					&& s[i - 1] != '"' && s[i - 1] != '<' && s[i - 1] != '>'))
 			{
 				nb_strs++;
 				while (s[i] && s[i] == c)
@@ -73,8 +73,8 @@ static	size_t	ft_get_nb_strs(char const *s, char c)
 			if (s[i - 1] == c && (s[i - 2] == '|' || s[i - 2] == '"'
 					|| s[i - 2] == '\'' || s[i - 2] == '<' || s[i - 2] == '>'))
 				nb_strs++;
-			while (s[i] != c && s[i] != '\"' && s[i] != '\''
-				&& s[i] != '|' && s[i] != '<' && s[i] != '>' && s[i] != '\0')
+			while (s[i] && s[i] != c && s[i] != '\"' && s[i] != '\''
+				&& s[i] != '|' && s[i] != '<' && s[i] != '>')
 				i++;
 			continue ;
 		}
