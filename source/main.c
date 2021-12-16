@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2021/12/16 14:05:14 by rdanica          ###   ########.fr       */
+/*   Updated: 2021/12/16 14:39:27 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,8 +208,6 @@ char	*preparser(char *str)
 	q2 = 0;
 	while (str[++i])
 	{
-		if (str[i] == ';')
-			return (';');
 		if (str[i] == '"')
 			q2++;
 		if (str[i] == '\'')
@@ -608,8 +606,6 @@ int	main(int argc, char **argv, char **env)
 			continue ;
 		if (str)
 			add_history(str);
-			
-		
 		str = preparser(str);
 		if (str == NULL)
 		{
