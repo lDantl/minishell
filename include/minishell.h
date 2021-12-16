@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2021/12/01 15:56:17 by rdanica          ###   ########.fr       */
+/*   Updated: 2021/12/03 17:37:37 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,12 @@ typedef struct s_env
 {
 	char			*key;
 	char			*value;
-	struct s_lst	*next;
-	struct s_lst	*back;
+	struct s_env	*next;
+	struct s_env	*back;
+	struct s_env	*next_order;
+	struct s_env	*back_order;
 }	t_env;
+
 
 char	*preparser(char *str);
 char	**ft_split_f_shell(char const *s, char c);
@@ -66,5 +69,11 @@ int		len_tab(char **str);
 char	*ft_space_delited(char *str);
 int		ft_quote_redir_or_pipe(char *str);
 void	ft_print_result(t_lst *cmd, char **massive);
+void	rl_replace_line(const char *text, int clear_undo);
+t_env	*ft_env_to_list(char **enviroment);
+t_env	*new_env_elem(char *str);
+void	lst_add_env(t_env **lst, t_env *el);
+char	*ft_get_key(char *str, int *n);
+char	*ft_get_value(char *str);
 
 #endif

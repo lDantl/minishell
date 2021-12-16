@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   split_for_shell.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/03 14:29:05 by rdanica           #+#    #+#             */
+/*   Updated: 2021/12/03 14:31:20 by rdanica          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	**ft_split_free(char **tab)
@@ -30,7 +42,7 @@ static	size_t	ft_get_nb_strs(char const *s, char c)
 		nb_strs++;
 	while (s[i])
 	{
-		if (s[i] == c)                                                             // пробелы
+		if (s[i] == c)
 		{
 			if ((s[i + 1] != '|' && s[i + 1] != '\'' && s[i + 1] != '"'
 					&& s[i + 1] != '<' && s[i + 1] != '>')
@@ -45,9 +57,9 @@ static	size_t	ft_get_nb_strs(char const *s, char c)
 			else
 				i++;
 		}
-		if (s[i] == '|')                                                           // пайпы
+		if (s[i] == '|')
 			nb_strs++;
-		if (s[i] == 34 || s[i] == 39)                                              // ковычки двойные и одинарные
+		if (s[i] == 34 || s[i] == 39)
 		{
 			nb_strs++;
 			if (s[i++] == 34)
@@ -59,14 +71,14 @@ static	size_t	ft_get_nb_strs(char const *s, char c)
 			continue ;
 			i++;
 		}
-		if (s[i] == '<' || s[i] == '>')                                             // редиректы
+		if (s[i] == '<' || s[i] == '>')
 		{
 			nb_strs++;
 			if (s[i + 1] == '<' || s[i + 1] == '>')
 				i++;
 		}
 		if (s[i] != c && s[i] != '\"' && s[i] != '\''
-			&& s[i] != '|' && s[i] != '<' && s[i] != '>')               // остальные символы
+			&& s[i] != '|' && s[i] != '<' && s[i] != '>')
 		{
 			if (s[i - 1] != c && (i != 0))
 				nb_strs++;
@@ -139,7 +151,9 @@ static void	ft_get_next_str(char **next_str, size_t *next_str_len, char c)
 		}
 		(*next_str_len)++;
 		i++;
-		if ((*next_str)[i] == '|' || (*next_str)[i] == '\"' || (*next_str)[i] == '\'' || (*next_str)[i] == '<' || (*next_str)[i] == '>')
+		if ((*next_str)[i] == '|' || (*next_str)[i] == '\"'
+		|| (*next_str)[i] == '\'' || (*next_str)[i] == '<'
+		|| (*next_str)[i] == '>')
 			return ;
 	}
 }
@@ -165,15 +179,10 @@ char	**ft_split_f_shell(char const *s, char c)
 	{
 		ft_get_next_str(&next_str, &next_str_len, c);
 		buf[i] = (char *)malloc(sizeof(char) * (next_str_len + 1));
-		//printf("%ld\n", next_str_len);
 		if (!buf[i])
 			return (ft_split_free(buf));
 		ft_strlcpy(buf[i], next_str, (next_str_len + 1));
-		//printf("%s\n", buf[i]);
 	}
 	buf[i] = NULL;
 	return (buf);
 }
-
-
-// 'ls -la\'|\"cat\"|>1|echo| < |$fesfesfe|\"|\"|'\"$USER\"'\"\"|\"$USER\"| >> |4| << |5|echo|$PWD

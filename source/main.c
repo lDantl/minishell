@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2021/12/01 16:05:40 by rdanica          ###   ########.fr       */
+/*   Updated: 2021/12/16 14:05:14 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,6 +208,8 @@ char	*preparser(char *str)
 	q2 = 0;
 	while (str[++i])
 	{
+		if (str[i] == ';')
+			return (';');
 		if (str[i] == '"')
 			q2++;
 		if (str[i] == '\'')
@@ -240,7 +242,18 @@ void	recording_to_lists(t_lst **cmd, char **massive, char **env)
 		*cmd = (*cmd)->back;
 }
 
+char **argvdup(char **ar)
+{
+	int		i;
+	char 	**new_argv;
 
+	new_argv = (char **)malloc(sizeof(char *) * (len_tab(ar) + 1));
+	i = -1;
+	while (ar[++i])
+		new_argv[i] = ft_strdup(ar[i]);
+	new_argv[i] = NULL;
+	return (new_argv);
+}
 
 char	**record_redicts(char **argv)
 {
@@ -545,8 +558,6 @@ int	validator_ne_pidr(char **massive)
 	return (1);
 }
 
-
-
 void	cmd_c_sl(int signum)
 {
 	(void)signum;
@@ -570,13 +581,10 @@ void	cmd_c(int signum)
 	rl_redisplay();
 }
 
-
-
-
-
 int	main(int argc, char **argv, char **env)
 {
 	t_lst	*cmd;
+	t_env	*ev;
 	int		i;
 	char	**massive;
 	char	*str;
@@ -586,11 +594,12 @@ int	main(int argc, char **argv, char **env)
 	cmd = NULL;
 	(void) argc;
 	(void) argv;
+	ev = ft_env_to_list(argvdup(env));
 	while (1)
 	{
 		signal(SIGINT, cmd_c);
 		signal(SIGQUIT, SIG_IGN);
-		str = readline("\033[0;32mIskander $> \033[0;29m");
+		str = readline("\033[0;32mMinishell $> \033[0;29m");
 		signal(SIGINT, cmd_c_fork);
 		signal(SIGQUIT, cmd_c_sl);
 		if (!str)
@@ -599,10 +608,12 @@ int	main(int argc, char **argv, char **env)
 			continue ;
 		if (str)
 			add_history(str);
+			
+		
 		str = preparser(str);
 		if (str == NULL)
 		{
-			printf("error\n");
+			printf("Error! Quotes are not closed\n");
 			continue ;
 		}
 		str = ft_strtrim(str, " ");
@@ -625,12 +636,14 @@ int	main(int argc, char **argv, char **env)
 
 void	ft_print_result(t_lst *cmd, char **massive)
 {
-	t_lst *temp = cmd;
-	int i = -1;
+	t_lst	*temp;
+	int		i;
+
+	i = -1;
+	temp = cmd;
 	while (massive[++i])
 		printf("MASSIVE[%d]: %s\n", i, massive[i]);
 	printf("\n\n\n");
-	
 	i = -1;
 	while (cmd)
 	{
@@ -654,30 +667,42 @@ void	ft_print_result(t_lst *cmd, char **massive)
 	}
 }
 
-t_env	*ft_env_to_list(char **env)
+t_env	*ft_env_to_list(char **enviroment)
 {
 	t_env	*env;
 	int		i;
 
 	i = -1;
 	env = NULL;
-	while(env[++i])
+	while (enviroment[++i])
 	{
-		lst_add_env(&env, new_env_elem(env[i]));
+		lst_add_env(&env, new_env_elem(enviroment[i]));
 	}
+	while (env->back)
+		env = env->back;
+	free_argv(enviroment);
+	return (env);
 }
 
-t_lst	*new_cmd(char *str)
+t_env	*new_env_elem(char *str)
 {
-	t_lst	*el;
+	t_env	*el;
 	int		n;
+	int		i;
 
 	n = 0;
-	ft_split_key 
+	i = 0;
+	el = (t_env *)malloc(sizeof(t_env));
+	el->back_order = NULL;
+	el->next_order = NULL;
+	el->next = NULL;
+	el->back = NULL;
+	el->key = ft_get_key(str, &n);
+	el->value = ft_get_value(str + (n + 1));
 	return (el);
 }
 
-void	lst_add_env(t_env **lst, t_lst *el)
+void	lst_add_env(t_env **lst, t_env *el)
 {
 	if (!el)
 		return ;
@@ -689,4 +714,21 @@ void	lst_add_env(t_env **lst, t_lst *el)
 	el->back = *lst;
 	(*lst)->next = el;
 	*lst = el;
+}
+
+char	*ft_get_key(char *str, int *n)
+{
+	if (!str || !*str)
+		return (NULL);
+	while (str[*n] && str[*n] != '=')
+		(*n)++;
+	str[*n] = '\0';
+	return (ft_strdup(str));
+}
+
+char	*ft_get_value(char *str)
+{
+	if (!str || !*str)
+		return (NULL);
+	return (ft_strdup(str));
 }
