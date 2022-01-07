@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/07 17:19:33 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/07 17:32:37 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -417,7 +417,8 @@ char	*ft_find_path(char *cmd, char **env)
 	int		i;
 
 	i = 0;
-	if (!cmd || !*cmd || !ft_this_built_in(cmd) || cmd[i] == '.')
+	if (!cmd || !*cmd || !ft_this_built_in(cmd) || cmd[i] == '/'
+		|| cmd[i] == '.')
 		return (0);
 	while (env[i] && ft_strnstr(env[i], "PATH=", 5) == 0)
 		i++;
