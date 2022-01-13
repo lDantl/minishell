@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/07 17:32:37 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/13 17:25:18 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,7 +229,7 @@ void	recording_to_lists(t_lst **cmd, char **massive, char **env)
 	pipe = 0;
 	while (massive[++i])
 	{
-		if (massive[i][0] == '|')
+		if (massive[i][0] == '|' && massive[i][1] != '|')
 		{
 			lst_add(cmd, new_cmd(massive, pipe, i, env));
 			pipe = i + 1;
@@ -553,6 +553,14 @@ int	validator_ne_pidr(char **massive)
 			printf("syntax error near unexpected token '|\'\n");
 			return (0);
 		}
+		if (*massive[i] == '>' || *massive[i] == '<')
+		{
+			if (*massive[i + 1] == '>' || *massive[i + 1] == '<')
+			{
+				printf("syntax error near unexpected token \"%s\"\n", massive[i]);
+				return (0);
+			}
+		}
 	}
 	return (1);
 }
@@ -579,6 +587,24 @@ void	cmd_c(int signum)
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 int	main(int argc, char **argv, char **env)
 {
@@ -623,13 +649,38 @@ int	main(int argc, char **argv, char **env)
 		parser(massive, env);
 		recording_to_lists(&cmd, massive, env);
 		if (!validator(cmd))
+		{
+			ft_free_lst(&cmd);
 			continue ;
+		}
 		redirects_find(&cmd);
 		ft_print_result(cmd, massive);
-		cmd = NULL;
+		ft_free_lst(&cmd);
 	}
 	return (0);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void	ft_print_result(t_lst *cmd, char **massive)
 {
@@ -728,4 +779,20 @@ char	*ft_get_value(char *str)
 	if (!str || !*str)
 		return (NULL);
 	return (ft_strdup(str));
+}
+
+void	ft_free_lst(t_lst **cmd)
+{
+	t_lst	*temp;
+
+	while (cmd && *cmd && (*cmd)->back)
+		*cmd = (*cmd)->back;
+	while (*cmd)
+	{
+		temp = *cmd;
+		*cmd = (*cmd)->next;
+		free_argv(temp->field);
+		free_argv(temp->redirs);
+		free(temp);
+	}
 }

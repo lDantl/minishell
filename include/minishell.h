@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2021/12/03 17:37:37 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/13 14:40:17 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,5 +75,7 @@ t_env	*new_env_elem(char *str);
 void	lst_add_env(t_env **lst, t_env *el);
 char	*ft_get_key(char *str, int *n);
 char	*ft_get_value(char *str);
+void	ft_free_lst(t_lst **cmd);
+
 
 #endif

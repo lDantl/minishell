@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:29:05 by rdanica           #+#    #+#             */
-/*   Updated: 2021/12/03 14:31:20 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/13 16:21:20 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static	size_t	ft_get_nb_strs(char const *s, char c)
 			else
 				i++;
 		}
-		if (s[i] == '|')
+		if (s[i] == '|' && s[i + 1] != '|')
 			nb_strs++;
 		if (s[i] == 34 || s[i] == 39)
 		{
@@ -143,10 +143,16 @@ static void	ft_get_next_str(char **next_str, size_t *next_str_len, char c)
 			}
 			return ;
 		}
-		if ((*next_str)[i] == '|')
+		if ((*next_str)[i] == '|' && (*next_str)[i + 1] != '|')
 		{
 			i++;
 			(*next_str_len)++;
+			return ;
+		}
+		if ((*next_str)[i] == '|' && (*next_str)[i + 1] == '|')
+		{
+			i += 2;
+			*next_str_len += 2;
 			return ;
 		}
 		(*next_str_len)++;
