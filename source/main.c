@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/13 17:25:18 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/15 17:45:15 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -541,23 +541,26 @@ char	*ft_space_delited(char *str)
 	return (str);
 }
 
-int	validator_ne_pidr(char **massive)
+int	validator_ne_pidr(char **mass)
 {
 	int	i;
+	int	j;
 
 	i = -1;
-	while (massive[++i])
+	j = 1;
+	while (mass[++i])
 	{
-		if ((*massive[i] == '|' && !massive[i + 1]) || **massive == '|')
+		if ((*mass[i] == '|' && !mass[i + 1]) || **mass == '|'
+			|| (*mass[i] == '|' && (*mass[i + 1] == '|' || mass[i][j] == '|')))
 		{
 			printf("syntax error near unexpected token '|\'\n");
 			return (0);
 		}
-		if (*massive[i] == '>' || *massive[i] == '<')
+		if (*mass[i] == '>' || *mass[i] == '<')
 		{
-			if (*massive[i + 1] == '>' || *massive[i + 1] == '<')
+			if (*mass[i + 1] == '>' || *mass[i + 1] == '<')
 			{
-				printf("syntax error near unexpected token \"%s\"\n", massive[i]);
+				printf("syntax error near unexpected token \"%s\"\n", mass[i]);
 				return (0);
 			}
 		}
@@ -601,7 +604,7 @@ void	cmd_c(int signum)
 
 
 
-
+//______________________________________________MAIN.C_________________________________________________________________________________________________________//
 
 
 
@@ -670,7 +673,7 @@ int	main(int argc, char **argv, char **env)
 
 
 
-
+//______________________________________________________________________________________________________________________________________________________________//
 
 
 
