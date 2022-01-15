@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/13 14:40:17 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/15 18:52:52 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_lst
 	char			**redirs;
 	struct s_lst	*next;
 	struct s_lst	*back;
+	int				redirs_first;
 }	t_lst;
 
 typedef struct s_env
@@ -46,7 +47,6 @@ typedef struct s_env
 	struct s_env	*next_order;
 	struct s_env	*back_order;
 }	t_env;
-
 
 char	*preparser(char *str);
 char	**ft_split_f_shell(char const *s, char c);
@@ -76,6 +76,5 @@ void	lst_add_env(t_env **lst, t_env *el);
 char	*ft_get_key(char *str, int *n);
 char	*ft_get_value(char *str);
 void	ft_free_lst(t_lst **cmd);
-
 
 #endif

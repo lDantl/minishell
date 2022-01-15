@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/15 17:45:15 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/15 19:21:00 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ t_lst	*new_cmd(char **massive, int i, int p, char **env)
 	el->next = NULL;
 	el->back = NULL;
 	el->redirs = NULL;
+	el->redirs_first = 0;
 	el->field[n] = ft_find_path(massive[i], env);
 	if (el->field[n] != 0)
 	{
@@ -331,14 +332,19 @@ int	redirect_count(char **argv)
 }
 
 
-char	**rewrite_cmd(char **argv)
+char	**rewrite_cmd(char **argv, char **env)
 {
 	int		i;
 	int		str;
 	char	**temp;
+	int		flag;
+	char	*buf;
 
 	i = 0;
 	str = 0;
+	flag = 0;
+	if (*argv[0] == '>' || *argv[0] == '<')
+		flag = 1;
 	temp = (char **)malloc(((len_tab(argv) - redirect_count(argv)) + 1) * \
 	sizeof(char *));
 	while (argv[i])
@@ -356,11 +362,16 @@ char	**rewrite_cmd(char **argv)
 		i++;
 	}
 	temp[str] = NULL;
+	if (flag == 1)
+	{
+		buf = temp[0];
+		temp[0] = ft_find_path(temp[0], env);
+		free (buf);
+	}
 	return (temp);
 }
 
-
-void redirects_find(t_lst **cmd)
+void redirects_find(t_lst **cmd, char **env)
 {
 	t_lst		*temp;
 	char		**ar;
@@ -379,13 +390,12 @@ void redirects_find(t_lst **cmd)
 		(*cmd)->redirs = record_redicts(ar);
 		if (!(*cmd)->redirs)
 			break ;
-		(*cmd)->field = rewrite_cmd(ar);
+		(*cmd)->field = rewrite_cmd(ar, env);
 		free_argv(ar);
 		*cmd = (*cmd)->next;
 	}
 	*cmd = temp;
 }
-
 
 int	validator(t_lst *cmd)
 {
@@ -656,7 +666,7 @@ int	main(int argc, char **argv, char **env)
 			ft_free_lst(&cmd);
 			continue ;
 		}
-		redirects_find(&cmd);
+		redirects_find(&cmd, env);
 		ft_print_result(cmd, massive);
 		ft_free_lst(&cmd);
 	}
