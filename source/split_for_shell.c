@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:29:05 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/15 19:28:04 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/15 20:17:20 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,16 @@ static	size_t	ft_get_nb_strs(char const *s, char c)
 				nb_strs++;
 			while (s[i] && s[i] != c && s[i] != '\"' && s[i] != '\''
 				&& s[i] != '|' && s[i] != '<' && s[i] != '>')
+			{
 				i++;
+				if (s[i] == '=')
+				{
+					i++;
+					while (s[i] && (s[i] != '|' || s[i] != '<' || s[i] != '>'
+						|| s[i] != ' '))
+						i++;
+				}
+			}
 			continue ;
 		}
 		i++;
@@ -153,6 +162,18 @@ static void	ft_get_next_str(char **next_str, size_t *next_str_len, char c)
 		{
 			i += 2;
 			*next_str_len += 2;
+			return ;
+		}
+		if ((*next_str)[i] == '=')
+		{
+			(*next_str_len)++;
+			i++;
+			while ((*next_str)[i] && ((*next_str)[i] != '|' || (*next_str)[i] == '<'
+				|| (*next_str)[i] == '<' || (*next_str)[i] == ' '))
+			{
+				(*next_str_len)++;
+				i++;
+			}
 			return ;
 		}
 		(*next_str_len)++;
