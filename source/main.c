@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/15 19:21:00 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/16 15:23:45 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*ft_dollar(char *str, char **env)
 			while (env[k][z] && env[k][z] != '=')
 				z++;
 			tmp2 = ft_substr(env[k], 0, z);
-			if (strcmp(tmp, tmp2) == 0)
+			if (ft_strcmp(tmp, tmp2) == 0)
 				break ;
 		}
 	}	
@@ -304,7 +304,6 @@ void	free_argv(char **argv)
 		free(argv);
 }
 
-
 int	len_tab(char **str)
 {
 	int	i;
@@ -332,27 +331,22 @@ int	redirect_count(char **argv)
 }
 
 
-char	**rewrite_cmd(char **argv, char **env)
+char	**rewrite_cmd(char **argv, char **env, t_lst **cmd)
 {
 	int		i;
 	int		str;
 	char	**temp;
-	int		flag;
-	char	*buf;
 
 	i = 0;
 	str = 0;
-	flag = 0;
 	if (*argv[0] == '>' || *argv[0] == '<')
-		flag = 1;
+		(*cmd)->redirs_first = 1;
 	temp = (char **)malloc(((len_tab(argv) - redirect_count(argv)) + 1) * \
 	sizeof(char *));
 	while (argv[i])
 	{
-		if (!ft_strcmp(argv[i], ">>") || \
-		!ft_strcmp(argv[i], ">") || \
-		!ft_strcmp(argv[i], "<") || \
-		!ft_strcmp(argv[i], "<<"))
+		if (!ft_strcmp(argv[i], ">>") || !ft_strcmp(argv[i], ">")
+			|| !ft_strcmp(argv[i], "<") || !ft_strcmp(argv[i], "<<"))
 		{
 			i += 2;
 			continue ;
@@ -362,12 +356,6 @@ char	**rewrite_cmd(char **argv, char **env)
 		i++;
 	}
 	temp[str] = NULL;
-	if (flag == 1)
-	{
-		buf = temp[0];
-		temp[0] = ft_find_path(temp[0], env);
-		free (buf);
-	}
 	return (temp);
 }
 
@@ -390,7 +378,7 @@ void redirects_find(t_lst **cmd, char **env)
 		(*cmd)->redirs = record_redicts(ar);
 		if (!(*cmd)->redirs)
 			break ;
-		(*cmd)->field = rewrite_cmd(ar, env);
+		(*cmd)->field = rewrite_cmd(ar, env, cmd);
 		free_argv(ar);
 		*cmd = (*cmd)->next;
 	}
@@ -568,6 +556,11 @@ int	validator_ne_pidr(char **mass)
 		}
 		if (*mass[i] == '>' || *mass[i] == '<')
 		{
+			if (!mass[i + 1])
+			{
+				printf("syntax error near unexpected token \'newline\'\n");
+				return (0);
+			}
 			if (*mass[i + 1] == '>' || *mass[i + 1] == '<')
 			{
 				printf("syntax error near unexpected token \"%s\"\n", mass[i]);
@@ -667,6 +660,13 @@ int	main(int argc, char **argv, char **env)
 			continue ;
 		}
 		redirects_find(&cmd, env);
+		if (cmd->redirs_first == 1)
+		{
+			tmp = cmd->field[0];
+			cmd->field[0] = ft_find_path(cmd->field[0], env);
+			if (cmd->field[0] == NULL)
+				cmd->field[0] = tmp;
+		}
 		ft_print_result(cmd, massive);
 		ft_free_lst(&cmd);
 	}
