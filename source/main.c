@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/16 15:23:45 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/16 16:58:37 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -669,6 +669,8 @@ int	main(int argc, char **argv, char **env)
 		}
 		ft_print_result(cmd, massive);
 		ft_free_lst(&cmd);
+		free(str);
+		free_argv(massive);
 	}
 	return (0);
 }
