@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/16 16:58:37 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/17 16:12:37 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -282,7 +282,6 @@ char	**record_redicts(char **argv)
 	return (temp);
 }
 
-
 void	free_str(char *string_free)
 {
 	if (string_free)
@@ -329,7 +328,6 @@ int	redirect_count(char **argv)
 			count++;
 	return (count * 2);
 }
-
 
 char	**rewrite_cmd(char **argv, char **env, t_lst **cmd)
 {
@@ -501,12 +499,24 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
+char	*ft_space_delited2(char	*str, int *i)
+{
+	int		space;
+	char	*temp;
+
+	space = *i;
+	while (str[space++] == ' ')
+		;
+	str[*i + 1] = '\0';
+	temp = str;
+	str = ft_strjoin(str, str + space - 1);
+	free(temp);
+	return (str);
+}
 
 char	*ft_space_delited(char *str)
 {
 	int		i;
-	int		space;
-	char	*temp;
 
 	i = -1;
 	while (str[++i])
@@ -526,20 +536,27 @@ char	*ft_space_delited(char *str)
 				return (str);
 		}
 		if (str[i] == ' ' && str[i + 1] == ' ')
-		{
-			space = i;
-			while (str[space++] == ' ')
-				;
-			str[i + 1] = '\0';
-			temp = str;
-			str = ft_strjoin(str, str + space - 1);
-			free(temp);
-		}
+			str = ft_space_delited2(str, &i);
 	}
 	return (str);
 }
 
-int	validator_ne_pidr(char **mass)
+int	validator_for_pipe_and_redir2(char **mass, int *i)
+{
+	if (!mass[*i + 1])
+	{
+		printf("syntax error near unexpected token \'newline\'\n");
+		return (0);
+	}
+	if (*mass[*i + 1] == '>' || *mass[*i + 1] == '<')
+	{
+		printf("syntax error near unexpected token \"%s\"\n", mass[*i]);
+		return (0);
+	}
+	return (1);
+}
+
+int	validator_for_pipe_and_redir(char **mass)
 {
 	int	i;
 	int	j;
@@ -556,16 +573,9 @@ int	validator_ne_pidr(char **mass)
 		}
 		if (*mass[i] == '>' || *mass[i] == '<')
 		{
-			if (!mass[i + 1])
-			{
-				printf("syntax error near unexpected token \'newline\'\n");
-				return (0);
-			}
-			if (*mass[i + 1] == '>' || *mass[i + 1] == '<')
-			{
-				printf("syntax error near unexpected token \"%s\"\n", mass[i]);
-				return (0);
-			}
+			if (validator_for_pipe_and_redir2(mass, &i))
+				continue ;
+			return (0);
 		}
 	}
 	return (1);
@@ -648,7 +658,7 @@ int	main(int argc, char **argv, char **env)
 		str = ft_strtrim(str, " ");
 		str = ft_space_delited(str);
 		massive = ft_split_f_shell(str, ' ');
-		if (!validator_ne_pidr(massive))
+		if (!validator_for_pipe_and_redir(massive))
 			continue ;
 		if (str == NULL)
 			return (1);
@@ -697,7 +707,7 @@ int	main(int argc, char **argv, char **env)
 
 
 
-void	ft_print_result(t_lst *cmd, char **massive)
+void	ft_print_result(t_lst *cmd, char **massive)     //_____________эта функция не нужна____________________________//
 {
 	t_lst	*temp;
 	int		i;

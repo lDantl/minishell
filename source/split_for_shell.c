@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:29:05 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/16 17:05:26 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/17 17:19:50 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ char	**ft_split_free(char **tab)
 	return (0);
 }
 
+
+
 static	size_t	ft_get_nb_strs(char const *s, char c)
 {
 	size_t	i;
@@ -40,69 +42,38 @@ static	size_t	ft_get_nb_strs(char const *s, char c)
 	if (s[i] != c && s[i] != '\"' && s[i] != '\''
 		&& s[i] != '|' && s[i] != '<' && s[i] != '>')
 		nb_strs++;
-	while (s[i])
+	return (ft_get_get_nbstr(s, c, i, nb_strs));
+}
+
+int	if_quotes(char **next_str, size_t **next_str_len, char c, int i)
+{
+	if ((*next_str)[i] == '\"')
 	{
-		if (s[i] == c)
+		i++;
+		while ((*next_str)[i] != '\"')
 		{
-			if ((s[i + 1] != '|' && s[i + 1] != '\'' && s[i + 1] != '"'
-					&& s[i + 1] != '<' && s[i + 1] != '>')
-				&& (s[i - 1] != '|' && s[i - 1] != '\''
-					&& s[i - 1] != '"' && s[i - 1] != '<' && s[i - 1] != '>'))
-			{
-				nb_strs++;
-				while (s[i] && s[i] == c)
-					i++;
-				continue ;
-			}
-			else
-				i++;
-		}
-		if (s[i] == '|' && s[i + 1] != '|')
-			nb_strs++;
-		if (s[i] == 34 || s[i] == 39)
-		{
-			nb_strs++;
-			if (s[i++] == 34)
-				while (s[i++] != 34)
-					;
-			else
-				while (s[i++] != 39)
-					;
-			continue ;
 			i++;
-		}
-		if (s[i] == '<' || s[i] == '>')
-		{
-			nb_strs++;
-			if (s[i + 1] == '<' || s[i + 1] == '>')
-				i++;
-		}
-		if (s[i] != c && s[i] != '\"' && s[i] != '\''
-			&& s[i] != '|' && s[i] != '<' && s[i] != '>')
-		{
-			if (s[i - 1] != c && (i != 0))
-				nb_strs++;
-			if (s[i - 1] == c && (s[i - 2] == '|' || s[i - 2] == '"'
-					|| s[i - 2] == '\'' || s[i - 2] == '<' || s[i - 2] == '>'))
-				nb_strs++;
-			while (s[i] && s[i] != c && s[i] != '\"' && s[i] != '\''
-				&& s[i] != '|' && s[i] != '<' && s[i] != '>')
-			{
-				i++;
-				if (s[i] == '=')
-				{
-					i++;
-					while (s[i] && (s[i] != '|' || s[i] != '<' || s[i] != '>'
-							|| s[i] != ' '))
-						i++;
-				}
-			}
-			continue ;
+			(*(*next_str_len))++;
 		}
 		i++;
+		(*(*next_str_len)) += 2;
+		return (2);
 	}
-	return (nb_strs);
+	if ((*next_str)[i] == '\'')
+	{
+		i++;
+		while ((*next_str)[i] != '\'')
+		{
+			i++;
+			(*(*next_str_len))++;
+		}
+		(*(*next_str_len)) += 2;
+		i++;
+		return (2);
+	}
+	return (0);
 }
+
 
 static void	ft_get_next_str(char **next_str, size_t *next_str_len, char c)
 {
@@ -117,66 +88,10 @@ static void	ft_get_next_str(char **next_str, size_t *next_str_len, char c)
 	{
 		if ((*next_str)[i] == c)
 			return ;
-		if ((*next_str)[i] == '\"')
-		{
-			i++;
-			while ((*next_str)[i] != '\"')
-			{
-				i++;
-				(*next_str_len)++;
-			}
-			i++;
-			(*next_str_len) += 2;
+		if (if_quotes(next_str, &next_str_len, c, i) == 2
+			|| if_redirect(next_str, &next_str_len, c, i) == 2
+			|| if_equals(next_str, &next_str_len, c, i) == 2)
 			return ;
-		}
-		if ((*next_str)[i] == '\'')
-		{
-			i++;
-			while ((*next_str)[i] != '\'')
-			{
-				i++;
-				(*next_str_len)++;
-			}
-			(*next_str_len) += 2;
-			i++;
-			return ;
-		}
-		if ((*next_str)[i] == '<' || (*next_str)[i] == '>')
-		{
-			i++;
-			(*next_str_len)++;
-			if ((*next_str)[i] == '<' || (*next_str)[i] == '>')
-			{
-				i++;
-				(*next_str_len)++;
-			}
-			return ;
-		}
-		if ((*next_str)[i] == '|' && (*next_str)[i + 1] != '|')
-		{
-			i++;
-			(*next_str_len)++;
-			return ;
-		}
-		if ((*next_str)[i] == '|' && (*next_str)[i + 1] == '|')
-		{
-			i += 2;
-			*next_str_len += 2;
-			return ;
-		}
-		if ((*next_str)[i] == '=')
-		{
-			(*next_str_len)++;
-			i++;
-			while ((*next_str)[i] && ((*next_str)[i] != '|'
-				|| (*next_str)[i] == '<' || (*next_str)[i] == '<'
-				|| (*next_str)[i] == ' '))
-			{
-				(*next_str_len)++;
-				i++;
-			}
-			return ;
-		}
 		(*next_str_len)++;
 		i++;
 		if ((*next_str)[i] == '|' || (*next_str)[i] == '\"'

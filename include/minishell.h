@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/15 18:52:52 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/17 17:20:05 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,12 @@ void	lst_add_env(t_env **lst, t_env *el);
 char	*ft_get_key(char *str, int *n);
 char	*ft_get_value(char *str);
 void	ft_free_lst(t_lst **cmd);
+int		validator_for_pipe_and_redir2(char **mass, int *i);
+int		ft_get_nbr_symbols2(char const *s, char c, size_t *i, size_t *nb_strs);
+int		ft_get_nbr_symbols(char const *s, char c, size_t *i, size_t *nb_strs);
+size_t	ft_get_get_nbstr(char const *s, char c, size_t i, size_t nb_strs);
+int		if_equals(char **next_str, size_t **next_str_len, char c, int i);
+int		if_redirect(char **next_str, size_t **next_str_len, char c, int i);
+int		if_quotes(char **next_str, size_t **next_str_len, char c, int i);
 
 #endif
