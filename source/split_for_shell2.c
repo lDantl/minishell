@@ -6,11 +6,11 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 17:14:18 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/17 17:17:52 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/19 12:43:24 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 int	ft_get_nbr_symbols2(char const *s, char c, size_t *i, size_t *nb_strs)
 {

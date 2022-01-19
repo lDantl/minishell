@@ -6,11 +6,11 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/03 14:29:05 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/17 17:19:50 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/19 12:44:04 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
 char	**ft_split_free(char **tab)
 {
@@ -25,8 +25,6 @@ char	**ft_split_free(char **tab)
 	free(tab);
 	return (0);
 }
-
-
 
 static	size_t	ft_get_nb_strs(char const *s, char c)
 {
@@ -73,7 +71,6 @@ int	if_quotes(char **next_str, size_t **next_str_len, char c, int i)
 	}
 	return (0);
 }
-
 
 static void	ft_get_next_str(char **next_str, size_t *next_str_len, char c)
 {

@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/17 17:20:05 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/19 12:31:59 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,13 @@ size_t	ft_get_get_nbstr(char const *s, char c, size_t i, size_t nb_strs);
 int		if_equals(char **next_str, size_t **next_str_len, char c, int i);
 int		if_redirect(char **next_str, size_t **next_str_len, char c, int i);
 int		if_quotes(char **next_str, size_t **next_str_len, char c, int i);
+void	cmd_c_sl(int signum);
+void	cmd_c_fork(int signum);
+void	cmd_c(int signum);
+void	free_argv(char **argv);
+char	**argvdup(char **ar);
+int		validator_for_pipe_and_redir(char **mass);
+int		validator(t_lst *cmd);
+void	redirects_find(t_lst **cmd, char **env);
 
 #endif

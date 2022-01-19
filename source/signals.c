@@ -1,23 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/03 14:56:59 by rdanica           #+#    #+#             */
-/*   Updated: 2021/12/03 18:03:02 by rdanica          ###   ########.fr       */
+/*   Created: 2022/01/19 11:13:51 by rdanica           #+#    #+#             */
+/*   Updated: 2022/01/19 12:42:11 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../include/minishell.h"
 
-int	ft_pwd(void)
+void	cmd_c_sl(int signum)
 {
-	char	*s;
+	(void)signum;
+	printf("Quit :3\n");
+}
 
-	s = getcwd(NULL, 0);
-	printf("%s\n", s);
-	free(s);
-	return (1);
+void	cmd_c_fork(int signum)
+{
+	(void)signum;
+	write(1, "\n", 1);
+}
+
+void	cmd_c(int signum)
+{
+	(void)signum;
+	rl_on_new_line();
+	rl_redisplay();
+	write(1, "  \n", 3);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
