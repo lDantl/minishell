@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 20:21:07 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/21 21:07:06 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/21 20:37:43 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ void	ft_herdoc(char **redirs, t_msh *msh, t_lst *temp, int num_pipe)
 {
 	if (msh->herdocnum > 0)
 		ft_close(msh->herdocfd[msh->herdocnum - 1][0]);
-	if (dup2(msh->herdocfd[msh->herdocnum][0], 0) == -1)
-		ft_error_exit("ft_herdoc", 0, errno, msh);
+	dup2(msh->herdocfd[msh->herdocnum][0], 0);
 	msh->herdocnum++;
 }

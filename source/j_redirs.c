@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:48:09 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/21 21:08:21 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/21 20:21:42 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ static void	ft_redirect(t_msh	*msh, char *type, char *file_name)
 		msh->ret = 1;
 		return ;
 	}
-	if (dup2(msh->fdout, 1) == -1)
-		ft_error_exit("ft_input", 0, errno, msh);
+	dup2(msh->fdout, 1);
 }
 
 void	ft_redirs(t_lst *temp, t_msh *msh, int num_pipe)

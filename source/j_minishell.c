@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:47:58 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/21 21:07:57 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/21 20:31:05 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,8 @@ void	ft_minishell(t_msh *msh)
 		ft_one_cmd(msh);
 	else if (count > 1)
 		ft_pipex(count, msh);
-	if (msh->herdocfd)
-		ft_close(msh->herdocfd[msh->herdocnum - 1][0]);
-	if (dup2(msh->in, 0) == -1 || dup2(msh->out, 1) == -1)
-		ft_error_exit("ft_minishell", 0, errno, msh);
+	dup2(msh->in, 0);
+	dup2(msh->out, 1);
 	ft_close(msh->fdin);
 	ft_close(msh->fdout);
 }

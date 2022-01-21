@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 21:30:38 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/21 21:11:05 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/20 14:45:44 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,6 @@ int	ft_change_env(char *key, char *value, t_msh *msh)
 				if (temp->value)
 					free(temp->value);
 				temp->value = ft_strdup(value);
-				if (!temp->value)
-					ft_error_exit("ft_change_env", "malloc error", 0, msh);
 			}
 			ft_rewrite_envp(msh);
 			return (0);
