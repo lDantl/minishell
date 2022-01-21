@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 17:14:18 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/19 21:16:51 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/21 22:11:06 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	ft_get_nbr_symbols(char const *s, char c, size_t *i, size_t *nb_strs)
 			if (s[(*i)] == '=' && s[(*i) + 1] != c)
 			{
 				(*i)++;
-				while (s[(*i)] && (s[(*i)] != '|'
+				while (s[(*i)] && !(s[(*i)] != '|'
 						|| s[(*i)] != '<' || s[(*i)] != '>'
 						|| s[(*i)] != c))
 					(*i)++;
@@ -99,7 +99,7 @@ int	if_equals(char **next_str, size_t **next_str_len, char c, int i)
 	{
 		(*(*next_str_len))++;
 		i++;
-		while ((*next_str)[i] && ((*next_str)[i] != '|'
+		while ((*next_str)[i] && !((*next_str)[i] == '|'
 			|| (*next_str)[i] == '<' || (*next_str)[i] == '<'
 			|| (*next_str)[i] == ' '))
 		{

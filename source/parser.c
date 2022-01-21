@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:27:55 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/19 13:14:04 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/21 23:03:48 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,16 @@ char	*ft_quote(char *str, char **env)
 
 	i = 0;
 	if (str[i] == '\'')
-		return (ft_strtrim(str, "\'"));
+		return (ft_trim(str, "\'"));
 	else if (str[i] == '"')
 	{
 		if (str[++i] == '$')
 		{
-			tmp = ft_strtrim(str, "\"");
+			tmp = ft_trim(str, "\"");
 			tmp = ft_dollar(tmp, env);
 		}
 		else
-			return (ft_strtrim(str, "\""));
+			return (ft_trim(str, "\""));
 	}
 	return (tmp);
 }

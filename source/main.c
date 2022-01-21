@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/21 21:40:57 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/21 23:03:33 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	main(int argc, char **argv, char **env)
 			printf("Error! Quotes are not closed\n");
 			continue ;
 		}
-		str = ft_strtrim(str, " ");
+		str = ft_trim(str, " ");
 		str = ft_space_delited(str);
 		massive = ft_split_f_shell(str, ' ');
 		if (!validator_for_pipe_and_redir(massive))
