@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:58:02 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/20 15:24:07 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/21 20:19:00 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	ft_free_fds(t_msh *msh)
 	{
 		while (msh->pipefd[i])
 		{
+			ft_close(msh->pipefd[i][0]);
+			ft_close(msh->pipefd[i][1]);
 			free(msh->pipefd[i]);
 			i++;
 		}
@@ -28,7 +30,7 @@ void	ft_free_fds(t_msh *msh)
 	free(msh->pipefd);
 }
 
-static int	**ft_create_pipe(int count, t_msh *msh)
+int	**ft_create_pipe(int count, t_msh *msh)
 {
 	int	**fd;
 	int	i;
@@ -64,26 +66,27 @@ static void	ft_child_process(t_lst *temp, t_msh *msh, int i)
 	}
 	else
 	{
-		close(msh->pipefd[i][0]);
+		ft_close(msh->pipefd[i][0]);
 		if (dup2(msh->pipefd[i - 1][0], 0) == -1 ||
 			dup2(msh->pipefd[i][1], 1) == -1)
 			ft_error_exit("ft_child_process", 0, errno, msh);
 	}
-	ft_redirs(temp, msh);
+	ft_redirs(temp, msh, i);
 	exit(0);
 }
 
 static void	ft_parent_process(t_lst *temp, t_msh *msh, int i)
 {
 	waitpid(msh->pid, 0, 0);
+	ft_inc_herdocnum(temp, msh);
 	if (!temp->back)
-		close(msh->pipefd[i][1]);
+		ft_close(msh->pipefd[i][1]);
 	else if (!temp->next)
-		close(msh->pipefd[i - 1][0]);
+		ft_close(msh->pipefd[i - 1][0]);
 	else
 	{
-		close(msh->pipefd[i - 1][0]);
-		close(msh->pipefd[i][1]);
+		ft_close(msh->pipefd[i - 1][0]);
+		ft_close(msh->pipefd[i][1]);
 	}
 }
 

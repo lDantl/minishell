@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:47:58 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/19 18:30:41 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/21 20:31:05 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ static void	ft_one_cmd(t_msh *msh)
 	else if (!pid)
 	{
 		if (!msh->cmd->field || !msh->cmd->field[0])
-			ft_redirs(msh->cmd, msh);
+			ft_redirs(msh->cmd, msh, -1);
 		else if (built_in(msh->cmd->field[0]))
-			ft_redirs(msh->cmd, msh);
+			ft_redirs(msh->cmd, msh, -1);
 		exit(0);
 	}
 	else
@@ -46,7 +46,7 @@ static void	ft_one_cmd(t_msh *msh)
 		waitpid(pid, 0, 0);
 		if (msh->cmd->field && msh->cmd->field[0]
 			&& !built_in(msh->cmd->field[0]))
-			ft_redirs(msh->cmd, msh);
+			ft_redirs(msh->cmd, msh, -1);
 	}
 }
 
@@ -70,6 +70,7 @@ void	ft_minishell(t_msh *msh)
 	int	count;
 
 	count = ft_count_cmd(msh);
+	ft_herdocs_input(msh);
 	if (count == 1)
 		ft_one_cmd(msh);
 	else if (count > 1)

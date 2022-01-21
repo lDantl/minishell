@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/20 15:04:24 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/21 20:45:44 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ typedef struct s_msh
 	int                ret;
 	int                **pipefd;
 	int                pid;
+	int				**herdocfd;
+	int				herdocnum;
 }    t_msh;
 
 char	*preparser(char *str);
@@ -121,10 +123,11 @@ int		ft_is_red(char *s);
 void	ft_minishell(t_msh *msh);
 
 //j_redirs.c
-void	ft_redirs(t_lst *temp, t_msh *msh);
+void	ft_redirs(t_lst *temp, t_msh *msh, int num_pipe);
 
 //j_pipex.c
 void	ft_free_fds(t_msh *msh);
+int	**ft_create_pipe(int count, t_msh *msh);
 void	ft_pipex(int count, t_msh *msh);
 
 //j_built_in.c
@@ -154,4 +157,18 @@ int		ft_print_sorted_env(t_msh *msh);
 //j_cd.c
 void	ft_cd(t_lst *cmd, t_msh *msh);
 
+// j_herdoc.c
+int	ft_herdoc_count(t_msh *msh);
+void	ft_herdocs_input(t_msh *msh);
+void	ft_inc_herdocnum(t_lst *temp, t_msh *msh);
+void	ft_herdoc(char **redirs, t_msh *msh, t_lst *temp, int num_pipe);
+
+// j_utils.c
+int	ft_strcmp(const char *s1, const char *s2);
+char	*ft_strndup(const char *s1, int n);
+int	ft_strisnum(const char *str);
+void	ft_free_strs(char **strs, int len);
+int	ft_strs_count(char **strs);
+
 #endif
+ 

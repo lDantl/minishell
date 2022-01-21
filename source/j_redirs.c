@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:48:09 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/20 15:23:41 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/21 20:21:42 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,28 +51,6 @@ static void	ft_input(t_msh *msh, char *file_name)
 		ft_error_exit("ft_input", 0, errno, msh);
 }
 
-static void	ft_herdoc(char **redirs, t_msh *msh)
-{
-	int		fd[2];
-	char	*line;
-
-	if (pipe(fd) == -1)
-		ft_error_exit("ft_herdoc", 0, errno, msh);
-	if (dup2(msh->in, 1) == -1)
-		ft_error_exit("ft_herdoc", 0, errno, msh);
-	line = NULL;
-	while (1)
-	{
-		line = readline("\033[0;32m> \033[0;29m");
-		if (!ft_strcmp(redirs[1], line))
-			break ;
-		ft_putendl_fd(line, fd[1]);
-	}
-	close(fd[1]);
-	dup2(fd[0], 0);
-	free(line);
-}
-
 static void	ft_redirect(t_msh	*msh, char *type, char *file_name)
 {
 	ft_close(msh->fdout);
@@ -89,7 +67,7 @@ static void	ft_redirect(t_msh	*msh, char *type, char *file_name)
 	dup2(msh->fdout, 1);
 }
 
-void	ft_redirs(t_lst *temp, t_msh *msh)
+void	ft_redirs(t_lst *temp, t_msh *msh, int num_pipe)
 {
 	int	i;
 
@@ -99,7 +77,7 @@ void	ft_redirs(t_lst *temp, t_msh *msh)
 		if (!ft_strcmp(temp->redirs[i], "<"))
 			ft_input(msh, temp->redirs[i + 1]);
 		else if (!ft_strcmp(temp->redirs[i], "<<"))
-			ft_herdoc(&temp->redirs[i], msh);
+			ft_herdoc(&temp->redirs[i], msh, temp, num_pipe);
 		else
 			ft_redirect(msh, temp->redirs[i], temp->redirs[i + 1]);
 		i += 2;

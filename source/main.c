@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/20 14:01:36 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/21 19:26:57 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,9 @@ int	main(int argc, char **argv, char **env)
         msh->fdout = -1;
         msh->ret = 0;
         msh->pipefd = NULL;
+		msh->herdocfd = NULL;
         msh->pid = -1;
+		msh->herdocnum = -1;
         if (msh->in == -1 || msh->out == -1)
             ft_print_error("main", 0, errno);
         else
