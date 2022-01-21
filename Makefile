@@ -9,13 +9,13 @@ OBJS		=	$(patsubst %.c,%.o,$(SRCS))
 
 READLINE = -L/Users/$(USER)/.brew/Cellar/readline/8.1.1/lib/ -lreadline
 
-INCLUDE		=	-I./include -I./libs/libft/
+INCLUDE		=	-I./include -I./libs/libft1/
 
 CC			=	gcc -g
 CFLAGS		=	-Wall -Wextra -Werror -g
 RM			=	rm -f
 
-LIB = ./libft/libft.a
+LIB = ./libft1/libft.a
 
 .PHONY:		all clean fclean re bonus
 

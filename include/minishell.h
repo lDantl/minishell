@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/21 23:12:15 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/21 23:39:50 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 # include <readline/history.h>
 # include <editline/readline.h>
 # include <signal.h>
-# include "../libft/libft.h"
+# include "../libft1/libft.h"
 
 typedef struct s_lst
 {
