@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/21 21:56:50 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/21 22:21:57 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int	main(int argc, char **argv, char **env)
 			if (cmd->field[0] == NULL)
 				cmd->field[0] = tmp;
 		}
-		ft_print_result(cmd, massive);
+		//ft_print_result(cmd, massive);
 
 		msh->cmd = cmd; //добавила3
         msh->in = dup(0);

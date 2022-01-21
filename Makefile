@@ -12,7 +12,7 @@ READLINE = -L/Users/$(USER)/.brew/Cellar/readline/8.1.1/lib/ -lreadline
 INCLUDE		=	-I./include -I./libs/libft/
 
 CC			=	gcc -g
-CFLAGS		=	-Wall -Wextra -Werror -g
+CFLAGS		=	-Wall -Wextra -Werror -g -fsanitize=address
 RM			=	rm -f
 
 LIB = ./libft/libft.a
