@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 17:36:22 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/19 12:42:11 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/21 21:40:57 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,18 @@ int	main(int argc, char **argv, char **env)
 			break ;
 		if (!*str)
 			continue ;
+		while (str[++i])
+		{
+			if (str[i] == ' ')
+				;
+			else
+				break ;
+		}
+		if (str[i] == '\0' && str[i - 1] == ' ')
+		{
+			free (str);
+			continue ;
+		}
 		if (str)
 			add_history(str);
 		str = preparser(str);
