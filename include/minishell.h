@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/19 12:31:59 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/21 23:12:15 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,22 @@ typedef struct s_env
 	struct s_env	*next_order;
 	struct s_env	*back_order;
 }	t_env;
+
+typedef struct s_msh
+{
+	t_env            *env;
+	t_lst            *cmd;
+	char            **envp;
+	int                in;
+	int                out;
+	int                fdin;
+	int                fdout;
+	int                ret;
+	int                **pipefd;
+	int                pid;
+	int				**herdocfd;
+	int				herdocnum;
+}    t_msh;
 
 char	*preparser(char *str);
 char	**ft_split_f_shell(char const *s, char c);
@@ -92,4 +108,67 @@ int		validator_for_pipe_and_redir(char **mass);
 int		validator(t_lst *cmd);
 void	redirects_find(t_lst **cmd, char **env);
 
+int    built_in(char *cmd);
+
+//j_start.c
+void	ft_free_env(t_env *env);
+void	ft_free_msh(t_msh *msh);
+void	ft_print_error(char *name, char *error, int num);
+void	ft_error_exit(char *name, char *error, int num, t_msh *msh);
+void	ft_inc_shlvl(t_msh *msh);
+
+//j_minishell.c
+void	ft_close(int fd);
+int		ft_is_red(char *s);
+void	ft_minishell(t_msh *msh);
+
+//j_redirs.c
+void	ft_redirs(t_lst *temp, t_msh *msh, int num_pipe);
+
+//j_pipex.c
+void	ft_free_fds(t_msh *msh);
+int	**ft_create_pipe(int count, t_msh *msh);
+void	ft_pipex(int count, t_msh *msh);
+
+//j_built_in.c
+void	ft_echo(t_lst *cmd, t_msh *msh);
+void	ft_env(t_lst *cmd, t_msh *msh);
+void	ft_pwd(t_msh *msh);
+int		ft_exit(t_lst *cmd, t_msh *msh);
+
+//j_export.c
+int		ft_envp_count(t_env **env);
+void	ft_print_error_export(char *arg);
+int		ft_export(t_lst *cmd, t_msh *msh);
+
+//j_unset.c
+void	ft_rewrite_envp(t_msh *msh);
+void	ft_unset(t_lst *cmd, t_msh *msh);
+
+//j_envp.c
+char	**ft_my_envp(t_msh *msh);
+int		ft_change_env(char *key, char *value, t_msh *msh);
+int		ft_add_env(char *key, char *value, t_msh *msh);
+
+//j_sort_env.c
+int		ft_env_count(t_env **env);
+int		ft_print_sorted_env(t_msh *msh);
+
+//j_cd.c
+void	ft_cd(t_lst *cmd, t_msh *msh);
+
+// j_herdoc.c
+int		ft_herdoc_count(t_msh *msh);
+void	ft_herdocs_input(t_msh *msh);
+void	ft_inc_herdocnum(t_lst *temp, t_msh *msh);
+void	ft_herdoc(char **redirs, t_msh *msh, t_lst *temp, int num_pipe);
+
+// j_utils.c
+int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strndup(const char *s1, int n);
+int		ft_strisnum(const char *str);
+void	ft_free_strs(char **strs, int len);
+int		ft_strs_count(char **strs);
+
 #endif
+ 
