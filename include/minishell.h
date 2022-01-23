@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/21 23:39:50 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/23 13:44:09 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ typedef struct s_lst
 	char			**redirs;
 	struct s_lst	*next;
 	struct s_lst	*back;
-	int				redirs_first;
 }	t_lst;
 
 typedef struct s_env
@@ -107,6 +106,8 @@ char	**argvdup(char **ar);
 int		validator_for_pipe_and_redir(char **mass);
 int		validator(t_lst *cmd);
 void	redirects_find(t_lst **cmd, char **env);
+void	qwerty(t_lst *cmd, char **env);
+
 
 int    built_in(char *cmd);
 

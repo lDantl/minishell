@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 12:19:16 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/19 12:42:11 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/23 13:43:53 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,6 @@ char	**rewrite_cmd(char **argv, char **env, t_lst **cmd)
 
 	i = 0;
 	str = 0;
-	if (*argv[0] == '>' || *argv[0] == '<')
-		(*cmd)->redirs_first = 1;
 	temp = (char **)malloc(((len_tab(argv) - redirect_count(argv)) + 1) * \
 	sizeof(char *));
 	while (argv[i])

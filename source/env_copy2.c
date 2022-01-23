@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 13:09:40 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/19 13:10:21 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/23 14:51:53 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	**argvdup(char **ar)
 char	*ft_get_value(char *str)
 {
 	if (!str || !*str)
-		return (NULL);
+		return (ft_strdup(""));
 	return (ft_strdup(str));
 }
 

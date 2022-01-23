@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 23:28:34 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/21 23:28:35 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/23 13:44:24 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,7 @@ int	main(int argc, char **argv, char **env)
 			continue ;
 		}
 		redirects_find(&cmd, env);
-		if (cmd->redirs_first == 1)
-		{
-			tmp = cmd->field[0];
-			cmd->field[0] = ft_find_path(cmd->field[0], env);
-			if (cmd->field[0] == NULL)
-				cmd->field[0] = tmp;
-		}
+		qwerty(cmd, env);
 		ft_print_result(cmd, massive);
         
         msh->cmd = cmd; //добавила3
