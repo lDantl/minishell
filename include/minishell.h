@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/23 13:44:09 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/23 18:17:01 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ typedef struct s_msh
 	int				herdocnum;
 }    t_msh;
 
-char	*preparser(char *str);
+int	preparser(char *str);
 char	**ft_split_f_shell(char const *s, char c);
 char	*ft_dollar(char *str, char **env);
 char	*ft_quote(char *str, char **env);
@@ -83,7 +83,7 @@ int		redirect_count(char **argv);
 int		len_tab(char **str);
 char	*ft_space_delited(char *str);
 int		ft_quote_redir_or_pipe(char *str);
-void	ft_print_result(t_lst *cmd, char **massive);
+void	ft_print_result(t_lst *cmd/*, char **massive*/);
 void	rl_replace_line(const char *text, int clear_undo);
 t_env	*ft_env_to_list(char **enviroment);
 t_env	*new_env_elem(char *str);
@@ -106,7 +106,7 @@ char	**argvdup(char **ar);
 int		validator_for_pipe_and_redir(char **mass);
 int		validator(t_lst *cmd);
 void	redirects_find(t_lst **cmd, char **env);
-void	qwerty(t_lst *cmd, char **env);
+void	final_find(t_lst *cmd, char **env);
 
 
 int    built_in(char *cmd);
@@ -127,7 +127,7 @@ void	ft_minishell(t_msh *msh);
 void	ft_redirs(t_lst *temp, t_msh *msh, int num_pipe);
 
 //j_pipex.c
-void	ft_free_fds(t_msh *msh);
+void	ft_free_fds(int **fds);
 int	**ft_create_pipe(int count, t_msh *msh);
 void	ft_pipex(int count, t_msh *msh);
 

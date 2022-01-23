@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:47:01 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/20 14:07:58 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/23 18:16:46 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ void	ft_free_msh(t_msh *msh)
 	if (msh->cmd)
 		ft_free_lst(&msh->cmd);
 	if (msh->pipefd)
-		ft_free_fds(msh);
+		ft_free_fds(msh->pipefd);
+	if (msh->herdocfd)
+		ft_free_fds(msh->herdocfd);
 	if (msh->envp)
 		ft_free_strs(msh->envp, ft_strs_count(msh->envp));
 	free(msh);

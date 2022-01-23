@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   record_to_list.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:31:58 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/23 14:34:29 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/23 17:57:11 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ t_lst	*new_cmd(char **massive, int i, int p, char **env)
 	el->next = NULL;
 	el->back = NULL;
 	el->redirs = NULL;
-	el->field[n] = ft_find_path(massive[i], env);
+	if (*env)
+		el->field[n] = ft_find_path(massive[i], env);
+	else
+		el->field[n] = ft_strdup(massive[i]);
 	if (el->field[n] != 0)
 	{
 		n++;

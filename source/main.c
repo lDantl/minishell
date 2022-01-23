@@ -3,33 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 23:28:34 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/23 13:44:24 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/23 17:54:27 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int	main(int argc, char **argv, char **env)
+t_msh *ft_msh(t_env	*ev)
 {
-	t_lst	*cmd;
-	t_env	*ev;
-	int		i;
-	char	**massive;
-	char	*str;
-	char	*tmp;
-    
-    t_msh    *msh; //добавила
-
-	i = -1;
-	cmd = NULL;
-	(void) argc;
-	(void) argv;
-	ev = ft_env_to_list(argvdup(env));
-    
-    msh = (t_msh *)malloc(sizeof(t_msh)); //добавила2
+	t_msh    *msh;
+	
+	msh = (t_msh *)malloc(sizeof(t_msh));
     if (!msh)
     {
         ft_print_error("main", "malloc error", 0);
@@ -39,8 +26,59 @@ int	main(int argc, char **argv, char **env)
     msh->env = ev;
     msh->envp = ft_my_envp(msh);
     msh->cmd = NULL;
-    ft_inc_shlvl(msh);
-    
+	return (msh);
+}
+
+void ft_start(t_msh *msh, t_lst *cmd)
+{
+	msh->cmd = cmd;
+    msh->in = dup(0);
+    msh->out = dup(1);
+    msh->fdin = -1;
+    msh->fdout = -1;
+    msh->ret = 0;
+    msh->pipefd = NULL;
+	msh->herdocfd = NULL;
+    msh->pid = -1;
+	msh->herdocnum = -1;
+    if (msh->in == -1 || msh->out == -1)
+        ft_print_error("main", 0, errno);
+    else
+        ft_minishell(msh);
+}
+
+int	parsing(char *str, t_lst **cmd, char **env)
+{
+	char	**massive;
+
+	if (!preparser(str))
+	{
+		printf("Error! Quotes are not closed\n");
+		return (1);
+	}
+	str = ft_trim(str, " ");
+	str = ft_space_delited(str);
+	massive = ft_split_f_shell(str, ' ');
+	free (str);
+	if (!validator_for_pipe_and_redir(massive))
+		return (1);
+	parser(massive, env);
+	recording_to_lists(cmd, massive, env);
+	if (!validator(*cmd))
+	{
+		ft_free_lst(cmd);
+		return (1);
+	}
+	redirects_find(cmd, env);
+	final_find(*cmd, env);
+	free_argv(massive);
+	return (0);
+}
+
+void circle(t_lst *cmd, char **env, t_msh *msh)
+{
+	char	*str;
+	
 	while (1)
 	{
 		signal(SIGINT, cmd_c);
@@ -54,61 +92,82 @@ int	main(int argc, char **argv, char **env)
 			continue ;
 		if (str)
 			add_history(str);
-		str = preparser(str);
-		if (str == NULL)
-		{
-			printf("Error! Quotes are not closed\n");
+		if (parsing(str, &cmd, env))
 			continue ;
-		}
-		str = ft_trim(str, " ");
-		str = ft_space_delited(str);
-		massive = ft_split_f_shell(str, ' ');
-		if (!validator_for_pipe_and_redir(massive))
-			continue ;
-		if (str == NULL)
-			return (1);
-		parser(massive, env);
-		recording_to_lists(&cmd, massive, env);
-		if (!validator(cmd))
-		{
-			ft_free_lst(&cmd);
-			continue ;
-		}
-		redirects_find(&cmd, env);
-		qwerty(cmd, env);
-		ft_print_result(cmd, massive);
-        
-        msh->cmd = cmd; //добавила3
-        msh->in = dup(0);
-        msh->out = dup(1);
-        msh->fdin = -1;
-        msh->fdout = -1;
-        msh->ret = 0;
-        msh->pipefd = NULL;
-		msh->herdocfd = NULL;
-        msh->pid = -1;
-		msh->herdocnum = -1;
-        if (msh->in == -1 || msh->out == -1)
-            ft_print_error("main", 0, errno);
-        else
-            ft_minishell(msh);
-        
-		ft_free_lst(&cmd);
-		free(str);
-		free_argv(massive);
+		ft_print_result(cmd);
+        ft_start(msh, cmd);
+		ft_free_lst(&cmd);		
 	}
+}
+
+int	main(int argc, char **argv, char **env)
+{
+	t_lst	*cmd;
+	t_env	*ev;
+    t_msh    *msh;
+
+	cmd = NULL;
+	(void)argc;
+	(void)argv;
+	if (*env)
+		ev = ft_env_to_list(argvdup(env));
+	else
+		ev = NULL;
+    msh = ft_msh(ev);
+    ft_inc_shlvl(msh);
+	circle(cmd, env, msh);
 	return (0);
 }
 
-void	ft_print_result(t_lst *cmd, char **massive)     //_____________эта функция не нужна____________________________//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void	ft_print_result(t_lst *cmd/*, char **massive*/)     //_____________эта функция не нужна____________________________//
 {
 	t_lst	*temp;
 	int		i;
 
 	i = -1;
 	temp = cmd;
-	while (massive[++i])
-		printf("MASSIVE[%d]: %s\n", i, massive[i]);
+	/*while (massive[++i])
+		printf("MASSIVE[%d]: %s\n", i, massive[i]);*/
 	printf("\n\n\n");
 	i = -1;
 	while (cmd)

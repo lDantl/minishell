@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   preparsing.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 11:19:59 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/19 14:38:36 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/23 16:50:27 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	*ft_space_delited(char *str)
 	return (str);
 }
 
-char	*preparser(char *str)
+int	preparser(char *str)
 {
 	int	i;
 	int	q;
@@ -71,6 +71,6 @@ char	*preparser(char *str)
 			q++;
 	}
 	if ((q % 2) != 0 || (q2 % 2) != 0)
-		return (NULL);
-	return (str);
+		return (0);
+	return (1);
 }

@@ -6,28 +6,28 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:58:02 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/21 20:19:00 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/23 18:15:30 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_free_fds(t_msh *msh)
+void	ft_free_fds(int **fds)
 {
 	int	i;
 
 	i = 0;
-	if (msh->pipefd)
+	if (fds)
 	{
-		while (msh->pipefd[i])
+		while (fds[i])
 		{
-			ft_close(msh->pipefd[i][0]);
-			ft_close(msh->pipefd[i][1]);
-			free(msh->pipefd[i]);
+			ft_close(fds[i][0]);
+			ft_close(fds[i][1]);
+			free(fds[i]);
 			i++;
 		}
 	}
-	free(msh->pipefd);
+	free(fds);
 }
 
 int	**ft_create_pipe(int count, t_msh *msh)
@@ -110,5 +110,5 @@ void	ft_pipex(int count, t_msh *msh)
 		temp = temp->next;
 		i++;
 	}
-	ft_free_fds(msh);
+	ft_free_fds(msh->pipefd);
 }
