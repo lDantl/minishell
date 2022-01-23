@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 20:21:07 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/23 18:12:01 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/23 20:12:59 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ static void	ft_herdoc_input(t_lst *temp_cmd, t_msh *msh, int *rednum)
 				line = readline("\033[0;32m> \033[0;29m");
 				if (!line || !ft_strcmp(temp_cmd->redirs[i + 1], line))
 				{
-					if (line)
-						free(line);
+					ft_free_line(line);
 					break ;
 				}
 				ft_putendl_fd(line, msh->herdocfd[*rednum][1]);

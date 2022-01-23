@@ -3,14 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   j_redirs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:48:09 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/23 15:59:45 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/23 20:13:35 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_free_line(char *line)
+{
+	if (line)
+		free(line);
+}
 
 static void	ft_execve(t_lst	*cmd, t_msh *msh)
 {

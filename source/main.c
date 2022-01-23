@@ -6,45 +6,45 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 23:28:34 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/23 17:54:27 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/23 19:56:12 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-t_msh *ft_msh(t_env	*ev)
+t_msh	*ft_msh(t_env	*ev)
 {
-	t_msh    *msh;
-	
+	t_msh	*msh;
+
 	msh = (t_msh *)malloc(sizeof(t_msh));
-    if (!msh)
-    {
-        ft_print_error("main", "malloc error", 0);
-        ft_free_env(ev);
-        exit (1);
-    }
-    msh->env = ev;
-    msh->envp = ft_my_envp(msh);
-    msh->cmd = NULL;
+	if (!msh)
+	{
+		ft_print_error("main", "malloc error", 0);
+		ft_free_env(ev);
+		exit (1);
+	}
+	msh->env = ev;
+	msh->envp = ft_my_envp(msh);
+	msh->cmd = NULL;
 	return (msh);
 }
 
-void ft_start(t_msh *msh, t_lst *cmd)
+void	ft_start(t_msh *msh, t_lst *cmd)
 {
 	msh->cmd = cmd;
-    msh->in = dup(0);
-    msh->out = dup(1);
-    msh->fdin = -1;
-    msh->fdout = -1;
-    msh->ret = 0;
-    msh->pipefd = NULL;
+	msh->in = dup(0);
+	msh->out = dup(1);
+	msh->fdin = -1;
+	msh->fdout = -1;
+	msh->ret = 0;
+	msh->pipefd = NULL;
 	msh->herdocfd = NULL;
-    msh->pid = -1;
+	msh->pid = -1;
 	msh->herdocnum = -1;
-    if (msh->in == -1 || msh->out == -1)
-        ft_print_error("main", 0, errno);
-    else
-        ft_minishell(msh);
+	if (msh->in == -1 || msh->out == -1)
+		ft_print_error("main", 0, errno);
+	else
+		ft_minishell(msh);
 }
 
 int	parsing(char *str, t_lst **cmd, char **env)
@@ -75,10 +75,10 @@ int	parsing(char *str, t_lst **cmd, char **env)
 	return (0);
 }
 
-void circle(t_lst *cmd, char **env, t_msh *msh)
+void	circle(t_lst *cmd, char **env, t_msh *msh)
 {
 	char	*str;
-	
+
 	while (1)
 	{
 		signal(SIGINT, cmd_c);
@@ -95,8 +95,8 @@ void circle(t_lst *cmd, char **env, t_msh *msh)
 		if (parsing(str, &cmd, env))
 			continue ;
 		ft_print_result(cmd);
-        ft_start(msh, cmd);
-		ft_free_lst(&cmd);		
+		ft_start(msh, cmd);
+		ft_free_lst(&cmd);
 	}
 }
 
@@ -104,7 +104,7 @@ int	main(int argc, char **argv, char **env)
 {
 	t_lst	*cmd;
 	t_env	*ev;
-    t_msh    *msh;
+	t_msh	*msh;
 
 	cmd = NULL;
 	(void)argc;
@@ -113,81 +113,8 @@ int	main(int argc, char **argv, char **env)
 		ev = ft_env_to_list(argvdup(env));
 	else
 		ev = NULL;
-    msh = ft_msh(ev);
-    ft_inc_shlvl(msh);
+	msh = ft_msh(ev);
+	ft_inc_shlvl(msh);
 	circle(cmd, env, msh);
 	return (0);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void	ft_print_result(t_lst *cmd/*, char **massive*/)     //_____________эта функция не нужна____________________________//
-{
-	t_lst	*temp;
-	int		i;
-
-	i = -1;
-	temp = cmd;
-	/*while (massive[++i])
-		printf("MASSIVE[%d]: %s\n", i, massive[i]);*/
-	printf("\n\n\n");
-	i = -1;
-	while (cmd)
-	{
-		while (cmd->field[++i])
-			printf("List[%d] %s\n\n", i, cmd->field[i]);
-		i = -1;
-		cmd = cmd->next;
-	}
-	i = -1;
-	while (temp)
-	{
-		if (!temp->redirs || !*temp->redirs)
-		{
-			temp = temp->next;
-			continue ;
-		}
-		while (temp->redirs[++i])
-			printf("Rediret[%d] %s\n\n", i, temp->redirs[i]);
-		i = -1;
-		temp = temp->next;
-	}
 }

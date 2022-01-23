@@ -6,7 +6,7 @@
 /*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 14:53:00 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/23 18:17:01 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/23 20:13:21 by jtawanda         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ typedef struct s_msh
 	int				herdocnum;
 }    t_msh;
 
-int	preparser(char *str);
+int		preparser(char *str);
 char	**ft_split_f_shell(char const *s, char c);
 char	*ft_dollar(char *str, char **env);
 char	*ft_quote(char *str, char **env);
@@ -83,7 +83,6 @@ int		redirect_count(char **argv);
 int		len_tab(char **str);
 char	*ft_space_delited(char *str);
 int		ft_quote_redir_or_pipe(char *str);
-void	ft_print_result(t_lst *cmd/*, char **massive*/);
 void	rl_replace_line(const char *text, int clear_undo);
 t_env	*ft_env_to_list(char **enviroment);
 t_env	*new_env_elem(char *str);
@@ -107,69 +106,44 @@ int		validator_for_pipe_and_redir(char **mass);
 int		validator(t_lst *cmd);
 void	redirects_find(t_lst **cmd, char **env);
 void	final_find(t_lst *cmd, char **env);
-
-
 int    built_in(char *cmd);
-
-//j_start.c
 void	ft_free_env(t_env *env);
 void	ft_free_msh(t_msh *msh);
 void	ft_print_error(char *name, char *error, int num);
 void	ft_error_exit(char *name, char *error, int num, t_msh *msh);
 void	ft_inc_shlvl(t_msh *msh);
-
-//j_minishell.c
 void	ft_close(int fd);
 int		ft_is_red(char *s);
 void	ft_minishell(t_msh *msh);
-
-//j_redirs.c
 void	ft_redirs(t_lst *temp, t_msh *msh, int num_pipe);
-
-//j_pipex.c
 void	ft_free_fds(int **fds);
-int	**ft_create_pipe(int count, t_msh *msh);
+int		**ft_create_pipe(int count, t_msh *msh);
 void	ft_pipex(int count, t_msh *msh);
-
-//j_built_in.c
 void	ft_echo(t_lst *cmd, t_msh *msh);
 void	ft_env(t_lst *cmd, t_msh *msh);
 void	ft_pwd(t_msh *msh);
 int		ft_exit(t_lst *cmd, t_msh *msh);
-
-//j_export.c
 int		ft_envp_count(t_env **env);
 void	ft_print_error_export(char *arg);
 int		ft_export(t_lst *cmd, t_msh *msh);
-
-//j_unset.c
 void	ft_rewrite_envp(t_msh *msh);
 void	ft_unset(t_lst *cmd, t_msh *msh);
-
-//j_envp.c
 char	**ft_my_envp(t_msh *msh);
 int		ft_change_env(char *key, char *value, t_msh *msh);
 int		ft_add_env(char *key, char *value, t_msh *msh);
-
-//j_sort_env.c
 int		ft_env_count(t_env **env);
 int		ft_print_sorted_env(t_msh *msh);
-
-//j_cd.c
 void	ft_cd(t_lst *cmd, t_msh *msh);
-
-// j_herdoc.c
 int		ft_herdoc_count(t_msh *msh);
 void	ft_herdocs_input(t_msh *msh);
 void	ft_inc_herdocnum(t_lst *temp, t_msh *msh);
 void	ft_herdoc(char **redirs, t_msh *msh, t_lst *temp, int num_pipe);
-
-// j_utils.c
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strndup(const char *s1, int n);
 int		ft_strisnum(const char *str);
 void	ft_free_strs(char **strs, int len);
 int		ft_strs_count(char **strs);
+void	ft_free_line(char *line);
 
 #endif
  
