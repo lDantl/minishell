@@ -6,7 +6,7 @@
 /*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 13:13:25 by rdanica           #+#    #+#             */
-/*   Updated: 2022/01/19 14:27:53 by rdanica          ###   ########.fr       */
+/*   Updated: 2022/01/23 19:48:12 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*ft_dollar(char *str, char **env)
 	int		in[4];
 	char	*tmps[2];
 
-	ft_bzero(in, 4);
+	ft_bzero(in, 16);
 	ft_bzero(tmps, 2);
 	in[3] = -1;
 	while (str[++in[1]])
