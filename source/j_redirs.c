@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   j_redirs.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jtawanda <jtawanda@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rdanica <rdanica@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 17:48:09 by jtawanda          #+#    #+#             */
-/*   Updated: 2022/01/21 20:21:42 by jtawanda         ###   ########.fr       */
+/*   Updated: 2022/01/23 15:59:45 by rdanica          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ static void	ft_redirect(t_msh	*msh, char *type, char *file_name)
 {
 	ft_close(msh->fdout);
 	if (!ft_strcmp(type, ">"))
-		msh->fdout = open(file_name, O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
+		msh->fdout = open(file_name, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	else
-		msh->fdout = open(file_name, O_CREAT | O_WRONLY | O_APPEND, S_IRWXU);
+		msh->fdout = open(file_name, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	if (msh->fdout == -1)
 	{
 		ft_print_error(file_name, 0, errno);
